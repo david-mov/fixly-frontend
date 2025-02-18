@@ -8,8 +8,7 @@ import shield from './assets/shield.svg';
 
 import './style.css';
 
-
-function App() {
+export function App() {
 	const [reviews, setReviews] = useState([])
 	const [ok, setOk] = useState(false)
 

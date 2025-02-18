@@ -1,11 +1,12 @@
 {
 	"compilerOptions": {
-		"target": "ES2020",
+		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
 		"noEmit": true,
 		"allowJs": true,
 		"checkJs": true,
+		"esModuleInterop": true,
 
 		/* Preact Config */
 		"jsx": "react-jsx",
