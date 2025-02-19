@@ -1,5 +1,6 @@
-import { h } from 'preact';
-import { render, fireEvent, screen, waitFor } from '@testing-library/preact';
+/** @jsxImportSource preact */
+
+import { render, screen } from '@testing-library/preact';
 import { App } from '../src/index';
 
 describe('Header', async () => {
