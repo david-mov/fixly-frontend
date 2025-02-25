@@ -5,12 +5,10 @@
 		"moduleResolution": "bundler",
 		"strict": true,
 		"noEmit": true,
-		"allowJs": true,
-		"checkJs": true,
 		"forceConsistentCasingInFileNames": true,
 		"esModuleInterop": true,
 
-		"types": ["vitest/globals", "@testing-library/jest-dom"],
+		"types": ["vitest/globals", "@testing-library/jest-dom", "vite/client"],
 
 		/* Preact Config */
 		"jsx": "react-jsx",

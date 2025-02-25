@@ -8,33 +8,20 @@ import shield from './assets/shield.svg';
 
 import './style.css';
 
+// import type { JSX } from "preact";
+import {StarsProps, ReviewProps, ReviewsProps, ReviewFormProps, ReviewSubmit} from './types';
+import { getReviews, postReview } from './services';
+
 export function App() {
 	const [reviews, setReviews] = useState([])
 	const [ok, setOk] = useState(false)
 
 	useEffect(() => {
-		async function getReviews() {
-			const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/reviews')
-			if (response.ok) {
-				const reviews: ReviewProps[] = await response.json();
-				setReviews(reviews);
-			}
-			else console.error(response);
-		}
-		if (!reviews.length) getReviews();
+		if (!reviews.length) getReviews(setReviews);
 	}, [])
 
-	const submitReview = async (data) => {
-		const response = await fetch(import.meta.env.VITE_BACKEND_URL + '/api/reviews', {
-			method: 'POST',
-			body: JSON.stringify(data)
-		})
-		if (response.ok) {
-			const newReview = await response.json();
-			setReviews([newReview, ...reviews]);
-			setOk(true);
-		}
-		else console.error(response);
+	const submitReview = async (data: ReviewSubmit) => {
+		await postReview(data, reviews, setReviews, setOk);
 	}
 
 	return (
@@ -116,16 +103,10 @@ function Service(props) {
 	)
 }
 
-interface StarsProps {
-	rating: number,
-	onSelectRating?: Function,
-	size?: 'medium-font' | 'small-font'
-}
-
 class Stars extends Component<StarsProps> {
 	ratings = [1,2,3,4,5]
 
-	render({size, rating, onSelectRating}) {
+	render({size, rating, onSelectRating}: StarsProps) {
 		return (
 			<div>
 			{this.ratings.map(v =>
@@ -134,10 +115,6 @@ class Stars extends Component<StarsProps> {
 			</div>
 		);
 	}
-}
-
-interface ReviewFormProps {
-	submitReview: Function
 }
 
 class ReviewForm extends Component<ReviewFormProps> {
@@ -155,11 +132,11 @@ class ReviewForm extends Component<ReviewFormProps> {
 		this.setState({ comment: e.currentTarget.value });
 	}
 
-	onSelectRating = (e, value) => {
+	onSelectRating = (e, value: Number) => {
 		this.setState({rating: value});
 	}
   
-	render({submitReview}, { name, comment, rating }) {
+	render({submitReview}: {submitReview: Function}, { author, comment, rating }: ReviewSubmit) {
 	  return (
 		<form id="review-form" method="post">
 			<label for="name">Your Name (optional):</label>
@@ -169,7 +146,7 @@ class ReviewForm extends Component<ReviewFormProps> {
 			name="name" 
 			placeholder="Enter your name" 
 			autocomplete="name" 
-			value={name}
+			value={author}
 			onInput={this.onNameInput}
 			/><br/>
 		
@@ -192,14 +169,6 @@ class ReviewForm extends Component<ReviewFormProps> {
 	}
   }
 
-
-interface ReviewProps {
-	author: string,
-	comment: string,
-	rating: number,
-	postDate: string
-}
-
 function Review({author, comment, rating, postDate}: ReviewProps) {
 	return (
 		<div class="review">
@@ -211,16 +180,12 @@ function Review({author, comment, rating, postDate}: ReviewProps) {
 	);
 };
 
-interface ReviewsProps {
-	reviews: ReviewProps[]
-}
-
 class Reviews extends Component<ReviewsProps> {
 	constructor() {
 		super();
 	}
 
-	render({reviews}) {
+	render({reviews}: {reviews: ReviewProps[]}) {
 		return (
 			<div>
 				{
