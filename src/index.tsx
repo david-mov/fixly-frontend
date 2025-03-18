@@ -93,12 +93,19 @@ export function App() {
 	);
 }
 
-function Service(props) {
+interface ServiceProps {
+	icon: string,
+	alt: string,
+	title: string,
+	description: string
+}
+
+function Service({icon, alt, title, description}: ServiceProps) {
 	return (
 		<div class="service">
-			<img src={props.icon} alt={props.alt} height="75" width="75" />
-			<h3>{props.title}</h3>
-			<p>{props.description}</p>
+			<img src={icon} alt={alt} height="75" width="75" />
+			<h3>{title}</h3>
+			<p>{description}</p>
         </div>
 	)
 }
@@ -124,15 +131,15 @@ class ReviewForm extends Component<ReviewFormProps> {
 		comment: ''
 	};
   
-	onNameInput = e => {
-	  this.setState({ author: e.currentTarget.value });
+	onNameInput = (e: Event) => {
+	  this.setState({ author: (e.currentTarget as HTMLInputElement).value });
 	}
 
-	onCommentInput = e => {
-		this.setState({ comment: e.currentTarget.value });
+	onCommentInput = (e: Event) => {
+		this.setState({ comment: (e.currentTarget as HTMLInputElement).value });
 	}
 
-	onSelectRating = (e, value: Number) => {
+	onSelectRating = (e: Event, value: Number) => {
 		this.setState({rating: value});
 	}
   
@@ -203,4 +210,10 @@ class Reviews extends Component<ReviewsProps> {
 	}
 };
 
-render(<App />, document.getElementById('app'));
+const appElement = document.getElementById('app');
+
+if (appElement) {
+	render(<App />, appElement);
+} else {
+	console.error('Could not find element with ID "app"')
+}
