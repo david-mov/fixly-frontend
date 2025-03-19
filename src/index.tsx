@@ -8,9 +8,12 @@ import shield from './assets/shield.svg';
 
 import './style.css';
 
-// import type { JSX } from "preact";
-import {StarsProps, ReviewProps, ReviewsProps, ReviewFormProps, ReviewSubmit} from './types';
+import {ReviewProps, ReviewsProps, ReviewFormProps, ReviewSubmit} from './types';
 import { getReviews, postReview } from './services';
+
+import Service from './components/Service';
+import Stars from './components/Stars';
+import Review from './components/Review';
 
 export function App() {
 	const [reviews, setReviews] = useState([])
@@ -93,37 +96,6 @@ export function App() {
 	);
 }
 
-interface ServiceProps {
-	icon: string,
-	alt: string,
-	title: string,
-	description: string
-}
-
-function Service({icon, alt, title, description}: ServiceProps) {
-	return (
-		<div class="service">
-			<img src={icon} alt={alt} height="75" width="75" />
-			<h3>{title}</h3>
-			<p>{description}</p>
-        </div>
-	)
-}
-
-class Stars extends Component<StarsProps> {
-	ratings = [1,2,3,4,5]
-
-	render({size, rating, onSelectRating}: StarsProps) {
-		return (
-			<div>
-			{this.ratings.map(v =>
-				<span class={(rating<v ? 'star star-off' : 'star') + ` ${size || 'small-font'}`} data-value={v} onClick={e => !onSelectRating || onSelectRating(e, v)}>&#9733;</span>
-			)}
-			</div>
-		);
-	}
-}
-
 class ReviewForm extends Component<ReviewFormProps> {
 	state = {
 		author: '',
@@ -174,18 +146,7 @@ class ReviewForm extends Component<ReviewFormProps> {
 		</form>
 	  );
 	}
-  }
-
-function Review({author, comment, rating, postDate}: ReviewProps) {
-	return (
-		<div class="review">
-			<strong><span class="small-font">{author + ' '}</span></strong>
-			<span class="review-date">{postDate}</span>
-			<Stars rating={rating} />
-			<span class="small-font">{comment}</span>
-		</div>
-	);
-};
+}
 
 class Reviews extends Component<ReviewsProps> {
 	constructor() {
